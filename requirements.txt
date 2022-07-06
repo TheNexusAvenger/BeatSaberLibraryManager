@@ -1,0 +1,6 @@
+librosa
+marshmallow-dataclass
+pydub
+requests
+youtube_dl
+requests_toolbelt

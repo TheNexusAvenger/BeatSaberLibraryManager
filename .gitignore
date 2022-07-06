@@ -1,3 +1,14 @@
+# Personal use
+FindLatestMaps.py
+
+# User Specific
+database.sqlite
+configuration.json
+maps/
+
+# PyCharm
+.idea/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

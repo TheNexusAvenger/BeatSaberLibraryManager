@@ -1,0 +1,95 @@
+"""
+TheNexusAvenger
+
+Processes maps files with additional modifiers.
+"""
+
+import os
+import shutil
+from data.MapFileSet import loadMap
+from data.Song import Song
+from process.step.AddMissingRequirements import addMissingRequirements
+from process.step.AddSimpleLightShows import addSimpleLightShows
+from process.step.ClampMapSpeeds import clampMapSpeeds
+from process.step.ClampReactionTimes import clampReactionTimes
+from process.step.OverrideFiles import overrideFiles
+from process.step.RemoveEmptyMaps import removeEmptyMaps
+from process.step.SetSongCover import setSongCover
+from process.step.SetSongData import setSongData
+from typing import List
+
+
+BEATSAVER_PROCESS_STEPS = [
+    overrideFiles,
+    setSongData,
+    addMissingRequirements,
+    removeEmptyMaps,
+    addSimpleLightShows,
+    setSongCover,
+    clampMapSpeeds,
+    clampReactionTimes,
+]
+BEAT_SAGE_PROCESS_STEPS = [
+    overrideFiles,
+    setSongData,
+    addMissingRequirements,
+    # removeEmptyMapsExtension, # Beat Sage does not have empty maps.
+    addSimpleLightShows,
+    setSongCover,
+    clampMapSpeeds,
+    clampReactionTimes,
+]
+BASE_PATH = os.path.realpath(os.path.join(__file__, "..", "..", "maps"))
+VALIDATED_MAPS_PATH = os.path.join(BASE_PATH, "Maps")
+UNVALIDATED_MAPS_PATH = os.path.join(BASE_PATH, "UnvalidatedMaps")
+
+
+def processMap(song: Song, targetParentDirectory: str, processSteps: list) -> None:
+    """Processes a map.
+
+    :param song: Song entry to process.
+    :param targetParentDirectory: Target parent directory to save to.
+    :param processSteps: Steps to apply to the map.
+    """
+
+    mapFiles = loadMap(song, targetParentDirectory)
+    print("\tProcessing " + os.path.basename(song.mapDownloadPath))
+    for processStep in processSteps:
+        processStep(mapFiles)
+    mapFiles.write()
+
+
+def processMaps(songs: List[Song]) -> None:
+    """Processes a list of maps.
+
+    :param songs: Songs to process.
+    """
+
+    # Create the directories.
+    if not os.path.exists(VALIDATED_MAPS_PATH):
+        os.makedirs(VALIDATED_MAPS_PATH)
+    if not os.path.exists(UNVALIDATED_MAPS_PATH):
+        os.makedirs(UNVALIDATED_MAPS_PATH)
+
+    # Process the maps.
+    validatedMapFiles = []
+    unvalidatedMapFiles = []
+    for song in songs:
+        if song.validated is not True:
+            targetParentDirectory = UNVALIDATED_MAPS_PATH
+            unvalidatedMapFiles.append(os.path.basename(song.mapDownloadPath).replace(".zip", ""))
+        else:
+            targetParentDirectory = VALIDATED_MAPS_PATH
+            validatedMapFiles.append(os.path.basename(song.mapDownloadPath).replace(".zip", ""))
+        if song.mapSource == "BeatSaver":
+            processMap(song, targetParentDirectory, BEATSAVER_PROCESS_STEPS)
+        elif song.mapSource == "BeatSage":
+            processMap(song, targetParentDirectory, BEAT_SAGE_PROCESS_STEPS)
+
+    # Clear the files that no longer exist.
+    for fileName in os.listdir(VALIDATED_MAPS_PATH):
+        if fileName not in validatedMapFiles:
+            shutil.rmtree(os.path.join(VALIDATED_MAPS_PATH, fileName))
+    for fileName in os.listdir(UNVALIDATED_MAPS_PATH):
+        if fileName not in unvalidatedMapFiles:
+            shutil.rmtree(os.path.join(UNVALIDATED_MAPS_PATH, fileName))
