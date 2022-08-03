@@ -120,8 +120,8 @@ def processBeatSageMap(song: Song, audioFileLocation: str, coverFileLocation: st
                     mapFiles.append(difficultyMap["_beatmapFilename"])
 
         # Copy the cover.
-        coverExtension = os.path.basename(coverFileLocation).split(".")[1]
-        shutil.copy(coverFileLocation, os.path.join(mapLocation, "cover." + coverExtension))
+        coverExtension = os.path.splitext(os.path.basename(coverFileLocation))[1]
+        shutil.copy(coverFileLocation, os.path.join(mapLocation, "cover" + coverExtension))
         mapInfo["_coverImageFilename"] = "cover." + coverExtension
 
         # Process the difficulty maps.
