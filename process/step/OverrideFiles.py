@@ -17,7 +17,10 @@ def overrideFiles(mapFiles: MapFileSet) -> None:
     """
 
     # Return if there are no overrides.
-    overridesDirectory = os.path.realpath(os.path.join(__file__, "..", "..", "..", "maps", "Overrides", os.path.basename(mapFiles.song.mapDownloadPath).split(".")[0]))
+    mapDownloadFile = os.path.basename(mapFiles.song.mapDownloadPath)
+    if mapDownloadFile.endswith(".zip"):
+        mapDownloadFile = mapDownloadFile.replace(".zip", "")
+    overridesDirectory = os.path.realpath(os.path.join(__file__, "..", "..", "..", "maps", "Overrides", mapDownloadFile))
     if not os.path.exists(overridesDirectory):
         return
 
