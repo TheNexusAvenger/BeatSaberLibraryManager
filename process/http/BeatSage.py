@@ -43,7 +43,7 @@ def getBeatSageMap(audioFileLocation: str, coverFileLocation: str, downloadFileL
     # Send the download request.
     fields = {
         "audio_file": ("audio", open(audioFileLocation, "rb"), "audio/mpeg"),
-        "cover_art": ("cover", open(coverFileLocation, "rb"), "image/" + os.path.basename(coverFileLocation).split(".")[1]),
+        "cover_art": ("cover", open(coverFileLocation, "rb"), "image/" + os.path.splitext(os.path.basename(coverFileLocation))[1][1:]),
         "audio_metadata_title": "ArtistName",
         "audio_metadata_artist": "SongName",
         "difficulties": DIFFICULTIES,
@@ -60,7 +60,11 @@ def getBeatSageMap(audioFileLocation: str, coverFileLocation: str, downloadFileL
         "Content-Type": message.content_type
     }
     createMapResponse = requests.post("https://beatsage.com/beatsaber_custom_level_create", headers=headers, data=message)
-    downloadMapId = createMapResponse.json()["id"]
+    try:
+        downloadMapId = createMapResponse.json()["id"]
+    except:
+        print("Unexpected response from Beat Sage: " + str(createMapResponse.text))
+        raise
 
     # Download the map.
     mapUrl = "https://beatsage.com/beatsaber_custom_level_download/" + downloadMapId
