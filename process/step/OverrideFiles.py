@@ -24,8 +24,15 @@ def overrideFiles(mapFiles: MapFileSet) -> None:
     if not os.path.exists(overridesDirectory):
         return
 
+    # List the files.
+    fileNames = os.listdir(overridesDirectory)
+    for fileName in fileNames:
+        if fileName.lower() == "info.dat":
+            fileNames.remove(fileName)
+            fileNames.insert(0, fileName)
+
     # Override the files.
-    for fileName in os.listdir(overridesDirectory):
+    for fileName in fileNames:
         if fileName.lower() == "info.dat":
             print("\t\tOverriding info.dat file.")
             with open(os.path.join(overridesDirectory, fileName), encoding="utf8") as file:
@@ -35,6 +42,18 @@ def overrideFiles(mapFiles: MapFileSet) -> None:
             with open(os.path.join(overridesDirectory, fileName), encoding="utf8") as file:
                 mapFiles.difficultyFiles[fileName] = json.loads(file.read())
         else:
-            print("\t\tOverriding other file " + fileName)
-            with open(os.path.join(overridesDirectory, fileName), "rb") as file:
-                mapFiles.otherFiles[fileName] = file.read()
+            isNewMapFile = False
+            for mapSet in mapFiles.map._difficultyBeatmapSets:
+                for difficultyMap in mapSet._difficultyBeatmaps:
+                    if fileName == difficultyMap._beatmapFilename:
+                        isNewMapFile = True
+                        break
+
+            if isNewMapFile:
+                print("\t\tAdding difficulty file " + fileName)
+                with open(os.path.join(overridesDirectory, fileName), encoding="utf8") as file:
+                    mapFiles.difficultyFiles[fileName] = json.loads(file.read())
+            else:
+                print("\t\tOverriding other file " + fileName)
+                with open(os.path.join(overridesDirectory, fileName), "rb") as file:
+                    mapFiles.otherFiles[fileName] = file.read()
