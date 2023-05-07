@@ -37,13 +37,17 @@ DEFAULT_CONFIGURATION = {
             "Maximum": 700,
         },
     },
+    "EnabledSources": [
+        "BeatSaver",
+        "BeatSage"
+    ]
 }
 
 
 # Load the configuration.
 if not os.path.exists(CONFIGURATION_LOCATION):
     with open(CONFIGURATION_LOCATION, "w") as file:
-        file.write(json.dumps(DEFAULT_CONFIGURATION))
+        file.write(json.dumps(DEFAULT_CONFIGURATION, indent=4))
 with open(CONFIGURATION_LOCATION) as file:
     configuration = json.loads(file.read())
 
@@ -59,3 +63,15 @@ def getConfiguration(key: str, default: any) -> any:
     if key not in configuration.keys():
         return default
     return configuration[key]
+
+
+def sourceEnabled(source: str) -> bool:
+    """Returns if a map source is enabled.
+
+    :param source: Source of the maps.
+    :return: If the source is enabled.
+    """
+
+    if "EnabledSources" not in configuration.keys():
+        return True
+    return source in configuration["EnabledSources"]

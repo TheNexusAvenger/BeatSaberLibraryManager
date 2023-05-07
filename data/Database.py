@@ -6,11 +6,16 @@ Manages the database.
 
 import os
 import sqlite3
+from data import Configuration
 
 DEFAULT_LOCATION = os.path.realpath(__file__ + "/../../database.sqlite")
 DATABASE_TABLES = {
     "BeatSaverMaps": "Artist TEXT, SongName TEXT, SongSubName TEXT, Include INTEGER, Validated INTEGER, BeatSaverKey TEXT, OtherNotes Text",
     "BeatSageMaps": "Artist TEXT, SongName TEXT, SongSubName TEXT, Include INTEGER, Validated INTEGER, SongURL TEXT, CoverURL TEXT, OtherNotes Text",
+}
+DATABASE_TABLES_TO_SOURCE = {
+    "BeatSaverMaps": "BeatSaver",
+    "BeatSageMaps": "BeatSage",
 }
 
 
@@ -22,7 +27,8 @@ class Database:
         self.fileLocation = fileLocation
         self.connection = sqlite3.connect(fileLocation)
         for tableName in DATABASE_TABLES.keys():
-            self.initializeTable(tableName, DATABASE_TABLES[tableName])
+            if tableName not in DATABASE_TABLES_TO_SOURCE.keys() or Configuration.sourceEnabled(DATABASE_TABLES_TO_SOURCE[tableName]):
+                self.initializeTable(tableName, DATABASE_TABLES[tableName])
 
 
     def initializeTable(self, tableName: str, tableSchema: str) -> None:
