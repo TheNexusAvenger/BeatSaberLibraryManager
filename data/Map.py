@@ -5,6 +5,7 @@ Data for maps for Beat Saber.
 """
 
 from typing import List, Optional
+from marshmallow import EXCLUDE
 from marshmallow_dataclass import dataclass
 
 
@@ -20,6 +21,9 @@ DEFAULT_LABELS = {
 @dataclass
 class CustomDataContainer:
     _customData: Optional[dict]
+
+    class Meta:
+        unknown = EXCLUDE
 
     def getCustomData(self, key: any) -> any:
         """Returns the value for a custom data entry.
@@ -53,6 +57,8 @@ class BeatMap(CustomDataContainer):
     _noteJumpMovementSpeed: float
     _noteJumpStartBeatOffset: float
 
+    class Meta:
+        unknown = EXCLUDE
 
     def getDifficultyLabel(self) -> str:
         """Returns the difficulty label for the map.
@@ -82,6 +88,9 @@ class BeatMapSet:
     _beatmapCharacteristicName: str
     _difficultyBeatmaps: List[BeatMap]
 
+    class Meta:
+        unknown = EXCLUDE
+
 
 @dataclass
 class Map(CustomDataContainer):
@@ -101,3 +110,6 @@ class Map(CustomDataContainer):
     _allDirectionsEnvironmentName: Optional[str]
     _songTimeOffset: float
     _difficultyBeatmapSets: List[BeatMapSet]
+
+    class Meta:
+        unknown = EXCLUDE

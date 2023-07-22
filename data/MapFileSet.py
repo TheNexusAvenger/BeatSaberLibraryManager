@@ -8,6 +8,7 @@ import json
 import os
 from data.Map import Map
 from data.Song import Song
+from marshmallow import EXCLUDE
 from typing import Dict, Optional, Union
 from zipfile import ZipFile
 
@@ -80,7 +81,7 @@ class MapFileSet:
             raise AssertionError("Info.dat file not found.")
 
         # Read the info file.
-        self.map = Map.Schema().loads(self.otherFiles[infoFileName].decode("utf8"))
+        self.map = Map.Schema().loads(self.otherFiles[infoFileName].decode("utf8"), unknown=EXCLUDE)
         del self.otherFiles[infoFileName]
 
         # Read the difficulty maps.
