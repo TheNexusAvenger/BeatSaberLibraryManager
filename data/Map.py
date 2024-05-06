@@ -20,9 +20,11 @@ DEFAULT_LABELS = {
 
 @dataclass
 class CustomDataContainer:
-    _customData: Optional[dict]
+    # _customData stored here due to _version needing to be first on Meta Quest.
+    # Due to inheritance, this class's properties would appear first.
 
     class Meta:
+        ordered = True
         unknown = EXCLUDE
 
     def getCustomData(self, key: any) -> any:
@@ -56,8 +58,10 @@ class BeatMap(CustomDataContainer):
     _beatmapFilename: str
     _noteJumpMovementSpeed: float
     _noteJumpStartBeatOffset: float
+    _customData: Optional[dict]
 
     class Meta:
+        ordered = True
         unknown = EXCLUDE
 
     def getDifficultyLabel(self) -> str:
@@ -87,8 +91,10 @@ class BeatMap(CustomDataContainer):
 class BeatMapSet:
     _beatmapCharacteristicName: str
     _difficultyBeatmaps: List[BeatMap]
+    _customData: Optional[dict]
 
     class Meta:
+        ordered = True
         unknown = EXCLUDE
 
 
@@ -110,6 +116,8 @@ class Map(CustomDataContainer):
     _allDirectionsEnvironmentName: Optional[str]
     _songTimeOffset: float
     _difficultyBeatmapSets: List[BeatMapSet]
+    _customData: Optional[dict]
 
     class Meta:
+        ordered = True
         unknown = EXCLUDE
