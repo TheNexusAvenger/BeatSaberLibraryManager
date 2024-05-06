@@ -28,5 +28,5 @@ class Song:
         if self.songSubName is not None and self.songSubName != "":
             name += " " + self.songSubName
         if fileEscaped:
-            name = name.replace("/", "_").replace("\\", "_").replace(":", "_")
+            name = name.replace("/", "_").replace("\\", "_").replace(":", "_").replace("*", "_")
         return name
