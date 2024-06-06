@@ -5,7 +5,7 @@ Data for maps for Beat Saber.
 """
 
 from typing import List, Optional
-from marshmallow import EXCLUDE
+from marshmallow import EXCLUDE, post_dump
 from marshmallow_dataclass import dataclass
 
 
@@ -38,7 +38,6 @@ class CustomDataContainer:
             return self._customData[key]
         return None
 
-
     def setCustomData(self, key: any, value: any) -> None:
         """Sets a custom data entry.
 
@@ -49,6 +48,15 @@ class CustomDataContainer:
         if self._customData is None:
             self._customData = {}
         self._customData[key] = value
+
+    @post_dump
+    def remove_none_fields(self, data, **kwargs):
+        """Removes None fields (typically _customData).
+        Later versions of moddedBeat Saber do not seem to
+        load maps when null _customData is used.
+        """
+
+        return {key: value for key, value in data.items() if value is not None}
 
 
 @dataclass
@@ -88,7 +96,7 @@ class BeatMap(CustomDataContainer):
 
 
 @dataclass
-class BeatMapSet:
+class BeatMapSet(CustomDataContainer):
     _beatmapCharacteristicName: str
     _difficultyBeatmaps: List[BeatMap]
     _customData: Optional[dict]
