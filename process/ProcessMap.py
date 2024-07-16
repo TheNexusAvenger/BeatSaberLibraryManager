@@ -10,6 +10,7 @@ from data.MapFileSet import loadMap
 from data.Song import Song
 from process.step.AddMissingRequirements import addMissingRequirements
 from process.step.AddSimpleLightShows import addSimpleLightShows
+from process.step.AddSubjectiveQualityRating import addSubjectiveQualityRating
 from process.step.ClampMapSpeeds import clampMapSpeeds
 from process.step.ClampReactionTimes import clampReactionTimes
 from process.step.OverrideFiles import overrideFiles
@@ -26,6 +27,7 @@ BEATSAVER_PROCESS_STEPS = [
     removeEmptyMaps,
     addSimpleLightShows,
     setSongCover,
+    addSubjectiveQualityRating,
     clampMapSpeeds,
     clampReactionTimes,
 ]
@@ -36,6 +38,7 @@ BEAT_SAGE_PROCESS_STEPS = [
     # removeEmptyMapsExtension, # Beat Sage does not have empty maps.
     addSimpleLightShows,
     setSongCover,
+    addSubjectiveQualityRating,
     clampMapSpeeds,
     clampReactionTimes,
 ]

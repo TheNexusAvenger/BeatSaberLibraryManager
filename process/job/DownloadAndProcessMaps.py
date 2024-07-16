@@ -33,7 +33,7 @@ beatSaverEnabled = Configuration.sourceEnabled("BeatSaver")
 beatSageEnabled = Configuration.sourceEnabled("BeatSage")
 songsToProcess = []
 if beatSaverEnabled:
-    for songData in database.execute("SELECT Artist,SongName,SongSubName,Validated,BeatSaverKey FROM BeatSaverMaps WHERE Include = 1;"):
+    for songData in database.execute("SELECT Artist,SongName,SongSubName,Validated,BeatSaverKey,SubjectiveQualityRating FROM BeatSaverMaps WHERE Include = 1;"):
         # Store the base data.
         song = Song()
         song.mapSource = "BeatSaver"
@@ -42,12 +42,13 @@ if beatSaverEnabled:
         song.songSubName = songData[2]
         song.validated = (songData[3] == 1)
         song.beatSaverKey = songData[4]
+        song.subjectiveQualityRating = songData[5]
         song.mapDownloadPath = os.path.join(baseDownloadsPath, "BeatSaver", song.getSongName(True) + " [BeatSaver " + song.beatSaverKey + "].zip")
 
         # Add the song.
         songsToProcess.append(song)
 if beatSageEnabled:
-    for songData in database.execute("SELECT Artist,SongName,SongSubName,Validated,SongURL,CoverURL FROM BeatSageMaps WHERE Include = 1;"):
+    for songData in database.execute("SELECT Artist,SongName,SongSubName,Validated,SongURL,CoverURL,SubjectiveQualityRating FROM BeatSageMaps WHERE Include = 1;"):
         # Store the base data.
         song = Song()
         song.mapSource = "BeatSage"
@@ -57,6 +58,7 @@ if beatSageEnabled:
         song.validated = (songData[3] == 1)
         song.songUrl = songData[4]
         song.coverUrl = songData[5]
+        song.subjectiveQualityRating = songData[6]
         song.mapDownloadPath = os.path.join(baseDownloadsPath, "BeatSage", song.getSongName(True))
 
         # Add the song.

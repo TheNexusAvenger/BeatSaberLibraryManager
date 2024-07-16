@@ -14,6 +14,7 @@ class Song:
     mapSource: str
     mapDownloadPath: str
     validated: bool
+    subjectiveQualityRating: Optional[str]
     beatSaverKey: Optional[str]
     songUrl: Optional[str]
     coverUrl: Optional[str]

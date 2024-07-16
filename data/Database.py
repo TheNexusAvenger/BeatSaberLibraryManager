@@ -10,8 +10,8 @@ from data import Configuration
 
 DEFAULT_LOCATION = os.path.realpath(__file__ + "/../../database.sqlite")
 DATABASE_TABLES = {
-    "BeatSaverMaps": "Artist TEXT, SongName TEXT, SongSubName TEXT, Include INTEGER, Validated INTEGER, BeatSaverKey TEXT, OtherNotes Text",
-    "BeatSageMaps": "Artist TEXT, SongName TEXT, SongSubName TEXT, Include INTEGER, Validated INTEGER, SongURL TEXT, CoverURL TEXT, OtherNotes Text",
+    "BeatSaverMaps": "Artist TEXT, SongName TEXT, SongSubName TEXT, Include INTEGER, Validated INTEGER, BeatSaverKey TEXT, SubjectiveQualityRating TEXT, OtherNotes Text",
+    "BeatSageMaps": "Artist TEXT, SongName TEXT, SongSubName TEXT, Include INTEGER, Validated INTEGER, SongURL TEXT, SubjectiveQualityRating TEXT, CoverURL TEXT, OtherNotes Text",
 }
 DATABASE_TABLES_TO_SOURCE = {
     "BeatSaverMaps": "BeatSaver",
