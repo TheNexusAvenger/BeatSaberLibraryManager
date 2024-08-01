@@ -2,5 +2,5 @@ librosa
 marshmallow-dataclass
 pydub
 requests
-youtube_dl
+yt_dlp
 requests_toolbelt

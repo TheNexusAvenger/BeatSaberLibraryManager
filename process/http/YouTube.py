@@ -4,7 +4,7 @@ TheNexusAvenger
 Handles HTTP requests to YouTube.
 """
 
-import youtube_dl
+import yt_dlp
 
 
 def downloadMp3(url: str, path: str) -> None:
@@ -16,12 +16,12 @@ def downloadMp3(url: str, path: str) -> None:
 
     ydl_opts = {
         'format': 'bestaudio/best',
-        'outtmpl': path.replace(".mp3", ".m4a"),
+        'outtmpl': path.replace(".mp3", ""),
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
     }
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
