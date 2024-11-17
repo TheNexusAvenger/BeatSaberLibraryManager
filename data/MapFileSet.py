@@ -146,12 +146,14 @@ class MapFileSet:
         """
 
         # Create the parent directory.
-        if not os.path.exists(self.targetParentDirectory):
-            os.makedirs(self.targetParentDirectory)
+        filePath = os.path.join(self.targetParentDirectory, fileName)
+        if not os.path.exists(os.path.dirname(filePath)):
+            os.makedirs(os.path.dirname(filePath))
+        if os.path.isdir(filePath):
+            return
 
         # Return if the file contents are the same.
         # For syncing files between systems, this prevents constantly overwriting files that don't change.
-        filePath = os.path.join(self.targetParentDirectory, fileName)
         if os.path.exists(filePath):
             with open(filePath, "rb") as file:
                 if file.read() == data:
