@@ -17,10 +17,10 @@ def addMissingRequirements(mapFiles: MapFileSet) -> None:
     """
 
     # Iterate over the difficulties.
-    for mapSet in mapFiles.map._difficultyBeatmapSets:
-        for difficultyData in mapSet._difficultyBeatmaps:
+    for mapSet in mapFiles.map.difficultyBeatmapSets:
+        for difficultyData in mapSet.difficultyBeatmaps:
             # Read the map data.
-            difficultyMapData = mapFiles.difficultyFiles[difficultyData._beatmapFilename]
+            difficultyMapData = mapFiles.difficultyFiles[difficultyData.getBeatMapFileName()]
 
             # Add Noodle Extensions and Chroma
             if "_customData" in difficultyMapData.keys() and "_pointDefinitions" in difficultyMapData["_customData"].keys():

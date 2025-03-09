@@ -32,12 +32,13 @@ def setSongCover(mapFiles: MapFileSet) -> None:
         # Remove the existing file.
         # A loop is done since the casing of files can be different on Windows.
         print("\t\tReplacing album cover.")
+        coverImageFilename = mapFiles.map.getCoverImageFilename()
         for coverFileName in list(mapFiles.otherFiles.keys()):
-            if coverFileName.lower() == mapFiles.map._coverImageFilename:
+            if coverFileName.lower() == coverImageFilename:
                 del mapFiles.otherFiles[coverFileName]
                 break
 
         # Set the new file.
-        mapFiles.map._coverImageFilename = "cover." + extension
+        mapFiles.map.setCoverImageFilename("cover." + extension)
         with open(songCover, "rb") as file:
             mapFiles.otherFiles["cover." + extension] = file.read()

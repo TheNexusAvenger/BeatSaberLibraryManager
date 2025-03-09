@@ -16,13 +16,14 @@ def removeEmptyMaps(mapFiles: MapFileSet) -> None:
     """
 
     # Iterate over the difficulty sets.
-    for mapSet in mapFiles.map._difficultyBeatmapSets:
-        if mapSet._beatmapCharacteristicName not in LEVEL_TYPE_TO_IGNORE:
+    for mapSet in mapFiles.map.difficultyBeatmapSets:
+        beatmapCharacteristicName = mapSet.getBeatmapCharacteristicName()
+        if beatmapCharacteristicName not in LEVEL_TYPE_TO_IGNORE:
             # Get the difficulties to remove.
             difficultiesToRemove = []
-            for difficultyData in mapSet._difficultyBeatmaps:
+            for difficultyData in mapSet.difficultyBeatmaps:
                 # Add the difficulty if the map has no notes.
-                difficultyMapData = mapFiles.difficultyFiles[difficultyData._beatmapFilename]
+                difficultyMapData = mapFiles.difficultyFiles[difficultyData.getBeatMapFileName()]
                 if "colorNotes" in difficultyMapData.keys():
                     if len(difficultyMapData["colorNotes"]) == 0:
                         difficultiesToRemove.append(difficultyData)
@@ -32,5 +33,5 @@ def removeEmptyMaps(mapFiles: MapFileSet) -> None:
 
             # Remove the difficulties.
             for difficultyData in difficultiesToRemove:
-                print("\t\tRemoving " + mapSet._beatmapCharacteristicName + " difficulty " + difficultyData._difficulty + " (has no notes)")
-                mapSet._difficultyBeatmaps.remove(difficultyData)
+                print("\t\tRemoving " + beatmapCharacteristicName + " difficulty " + difficultyData.getDifficulty() + " (has no notes)")
+                mapSet.removeMap(difficultyData)

@@ -36,16 +36,16 @@ def overrideFiles(mapFiles: MapFileSet) -> None:
         if fileName.lower() == "info.dat":
             print("\t\tOverriding info.dat file.")
             with open(os.path.join(overridesDirectory, fileName), encoding="utf8") as file:
-                mapFiles.map = Map.Schema().loads(file.read())
+                mapFiles.map = Map(json.loads(file.read()))
         elif fileName in mapFiles.difficultyFiles.keys():
             print("\t\tOverriding difficulty file " + fileName)
             with open(os.path.join(overridesDirectory, fileName), encoding="utf8") as file:
                 mapFiles.difficultyFiles[fileName] = json.loads(file.read())
         else:
             isNewMapFile = False
-            for mapSet in mapFiles.map._difficultyBeatmapSets:
-                for difficultyMap in mapSet._difficultyBeatmaps:
-                    if fileName == difficultyMap._beatmapFilename:
+            for mapSet in mapFiles.map.difficultyBeatmapSets:
+                for difficultyMap in mapSet.difficultyBeatmaps:
+                    if fileName == difficultyMap.getBeatMapFileName():
                         isNewMapFile = True
                         break
 

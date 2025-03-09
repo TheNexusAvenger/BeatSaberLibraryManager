@@ -90,17 +90,21 @@ def clampReactionTimes(mapFiles: MapFileSet) -> None:
     """
 
     # Iterate over the difficulties.
-    for mapSet in mapFiles.map._difficultyBeatmapSets:
-        for difficultyData in mapSet._difficultyBeatmaps:
-            if str(difficultyData._difficultyRank) in CLAMPED_REACTION_TIMES.keys():
+    for mapSet in mapFiles.map.difficultyBeatmapSets:
+        for difficultyData in mapSet.difficultyBeatmaps:
+            difficultyRank = difficultyData.getDifficultyRank()
+            if str(difficultyRank) in CLAMPED_REACTION_TIMES.keys():
                 # Clamp the reaction times.
-                reactionTimeConstraints = CLAMPED_REACTION_TIMES[str(difficultyData._difficultyRank)]
-                mapReactionTime = calculateReactionTime(calculateJumpDistance(mapFiles.map._beatsPerMinute, difficultyData._noteJumpMovementSpeed, difficultyData._noteJumpStartBeatOffset), difficultyData._noteJumpMovementSpeed)
+                beatsPerMinute = mapFiles.map.getBeatsPerMinute()
+                noteJumpMovementSpeed = difficultyData.getNoteJumpMovementSpeed()
+                noteJumpStartBeatOffset = difficultyData.getNoteJumpStartBeatOffset()
+                reactionTimeConstraints = CLAMPED_REACTION_TIMES[str(difficultyRank)]
+                mapReactionTime = calculateReactionTime(calculateJumpDistance(beatsPerMinute, noteJumpMovementSpeed, noteJumpStartBeatOffset), noteJumpMovementSpeed)
                 if "Minimum" in reactionTimeConstraints.keys() and mapReactionTime < reactionTimeConstraints["Minimum"]:
                     print("\t\tIncreasing the Reaction Time of " + difficultyData.getDifficultyLabel() + " from " + str(mapReactionTime) + " ms to " + str(reactionTimeConstraints["Minimum"]) + " ms")
-                    difficultyData._noteJumpStartBeatOffset = calculateDesiredOffset(mapFiles.map._beatsPerMinute, calculateDesiredJumpDistance(reactionTimeConstraints["Minimum"], difficultyData._noteJumpMovementSpeed), difficultyData._noteJumpMovementSpeed)
+                    difficultyData.setNoteJumpStartBeatOffset(calculateDesiredOffset(beatsPerMinute, calculateDesiredJumpDistance(reactionTimeConstraints["Minimum"], noteJumpMovementSpeed), noteJumpMovementSpeed))
                     difficultyData.addDifficultyLabelModifier("▼")
                 elif "Maximum" in reactionTimeConstraints.keys() and mapReactionTime > reactionTimeConstraints["Maximum"]:
                     print("\t\tDecreasing the Reaction Time of " + difficultyData.getDifficultyLabel() + " from " + str(mapReactionTime) + " to " + str(reactionTimeConstraints["Maximum"]) + " ms")
-                    difficultyData._noteJumpStartBeatOffset = calculateDesiredOffset(mapFiles.map._beatsPerMinute, calculateDesiredJumpDistance(reactionTimeConstraints["Maximum"], difficultyData._noteJumpMovementSpeed), difficultyData._noteJumpMovementSpeed)
+                    difficultyData.setNoteJumpStartBeatOffset(calculateDesiredOffset(beatsPerMinute, calculateDesiredJumpDistance(reactionTimeConstraints["Maximum"], noteJumpMovementSpeed), noteJumpMovementSpeed))
                     difficultyData.addDifficultyLabelModifier("▲")

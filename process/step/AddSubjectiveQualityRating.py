@@ -6,6 +6,7 @@ Adds subjective quality ratings to the level author name information.
 
 from data.MapFileSet import MapFileSet
 
+
 def addSubjectiveQualityRating(mapFiles: MapFileSet) -> None:
     """Clamps the speed of maps.
 
@@ -20,4 +21,4 @@ def addSubjectiveQualityRating(mapFiles: MapFileSet) -> None:
 
     # Add the subjective quality rating.
     print("\t\tAdding subjective quality rating \"" + subjectiveQualityRating + "\".")
-    mapFiles.map._levelAuthorName = "[" + subjectiveQualityRating + "] " + mapFiles.map._levelAuthorName
+    mapFiles.map.prefixLevelAuthorName("[" + subjectiveQualityRating + "] ")

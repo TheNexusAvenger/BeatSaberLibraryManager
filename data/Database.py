@@ -30,7 +30,6 @@ class Database:
             if tableName not in DATABASE_TABLES_TO_SOURCE.keys() or Configuration.sourceEnabled(DATABASE_TABLES_TO_SOURCE[tableName]):
                 self.initializeTable(tableName, DATABASE_TABLES[tableName])
 
-
     def initializeTable(self, tableName: str, tableSchema: str) -> None:
         """Initializes a table if it doesn't exist.
 
@@ -54,7 +53,6 @@ class Database:
         else:
             print("Already initialized " + tableName)
 
-
     def execute(self, query: str, parameters: list = []) -> any:
         """Executes an SQL query and returns the result.
 
@@ -65,13 +63,11 @@ class Database:
 
         return self.connection.execute(query, parameters).fetchall()
 
-
     def commit(self) -> None:
         """Commits changes to the database.
         """
 
         self.connection.commit()
-
 
     def close(self) -> None:
         """Closes the database.

@@ -8,7 +8,6 @@ import json
 import os
 from data.Map import Map
 from data.Song import Song
-from marshmallow import EXCLUDE
 from typing import Dict, Optional, Union
 from zipfile import ZipFile
 
@@ -38,7 +37,6 @@ class MapFileSet:
     difficultyFiles: Dict[str, dict]
     otherFiles: Dict[str, bytes]
 
-
     def __init__(self):
         """Creates the map file set.
         """
@@ -46,7 +44,6 @@ class MapFileSet:
         self.targetParentDirectory = None
         self.difficultyFiles = {}
         self.otherFiles = {}
-
 
     def getMapName(self) -> str:
         """Returns the map name for the map.
@@ -56,7 +53,6 @@ class MapFileSet:
 
         return os.path.basename(self.targetParentDirectory)
 
-
     def getSongName(self, fileEscaped: bool = False) -> str:
         """Returns the name of the song for the map.
 
@@ -64,7 +60,6 @@ class MapFileSet:
         """
 
         return self.song.getSongName(fileEscaped)
-
 
     def loadFiles(self) -> None:
         """Loads the files from the otherFiles.
@@ -81,24 +76,23 @@ class MapFileSet:
             raise AssertionError("Info.dat file not found.")
 
         # Read the info file.
-        self.map = Map.Schema().loads(self.otherFiles[infoFileName].decode("utf8"), unknown=EXCLUDE)
+        self.map = Map(json.loads(self.otherFiles[infoFileName].decode("utf8")))
         del self.otherFiles[infoFileName]
 
         # Read the difficulty maps.
-        for mapSet in self.map._difficultyBeatmapSets:
-            for difficultyMap in mapSet._difficultyBeatmaps:
-                difficultyFileName = difficultyMap._beatmapFilename
+        for mapSet in self.map.difficultyBeatmapSets:
+            for difficultyMap in mapSet.difficultyBeatmaps:
+                difficultyFileName = difficultyMap.getBeatMapFileName()
                 if difficultyFileName in self.otherFiles.keys():
                     self.difficultyFiles[difficultyFileName] = json.loads(self.otherFiles[difficultyFileName])
                     del self.otherFiles[difficultyFileName]
-
 
     def write(self) -> None:
         """Writes the map to the file system.
         """
 
         # Write the info file.
-        self.writeJsonFile("Info.dat", Map.Schema().dump(self.map), indent=4)
+        self.writeJsonFile("Info.dat", self.map.data, indent=4)
 
         # Write the difficulty files.
         # Spaces are removed due to difficulties with loading maps in unmodded versions.
@@ -108,7 +102,6 @@ class MapFileSet:
         # Write the other files.
         for fileName in self.otherFiles.keys():
             self.writeFile(fileName, self.otherFiles[fileName])
-
 
     def writeJsonFile(self, fileName: str, data: Union[dict, list], indent=None, separators: Optional[tuple] = None) -> None:
         """Writes a JSON file for the map.
@@ -136,7 +129,6 @@ class MapFileSet:
         # Write the file.
         with open(filePath, "w", encoding="utf8") as file:
             file.write(json.dumps(data, indent=indent, separators=separators, ensure_ascii=False))
-
 
     def writeFile(self, fileName: str, data: bytes) -> None:
         """Writes a file for the map.

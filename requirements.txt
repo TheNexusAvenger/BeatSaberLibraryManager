@@ -1,5 +1,4 @@
 librosa
-marshmallow-dataclass
 pydub
 requests
 yt_dlp

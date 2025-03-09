@@ -13,6 +13,6 @@ def setSongData(mapFiles: MapFileSet) -> None:
     :param mapFiles: Map to process.
     """
 
-    mapFiles.map._songAuthorName = mapFiles.song.artist
-    mapFiles.map._songName = mapFiles.song.songName
-    mapFiles.map._songSubName = mapFiles.song.songSubName
+    mapFiles.map.setSongAuthorName(mapFiles.song.artist)
+    mapFiles.map.setSongName(mapFiles.song.songName)
+    mapFiles.map.setSongSubName(mapFiles.song.songSubName)
