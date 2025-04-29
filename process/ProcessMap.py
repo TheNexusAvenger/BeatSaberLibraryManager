@@ -90,9 +90,9 @@ def processMaps(songs: List[Song]) -> None:
             processMap(song, targetParentDirectory, BEAT_SAGE_PROCESS_STEPS)
 
     # Clear the files that no longer exist.
-    for fileName in os.listdir(VALIDATED_MAPS_PATH):
-        if fileName not in validatedMapFiles:
-            shutil.rmtree(os.path.join(VALIDATED_MAPS_PATH, fileName))
-    for fileName in os.listdir(UNVALIDATED_MAPS_PATH):
-        if fileName not in unvalidatedMapFiles:
-            shutil.rmtree(os.path.join(UNVALIDATED_MAPS_PATH, fileName))
+    for mapDirectoryPath in [VALIDATED_MAPS_PATH, UNVALIDATED_MAPS_PATH]:
+        for fileName in os.listdir(mapDirectoryPath):
+            if fileName not in validatedMapFiles:
+                filePath = os.path.join(mapDirectoryPath, fileName)
+                if os.path.isdir(filePath):
+                    shutil.rmtree(filePath)
