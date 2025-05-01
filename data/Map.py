@@ -37,6 +37,7 @@ class CustomDataContainer:
 
         for key in self.data.keys():
             return key.startswith("_")
+        return False
 
     def getCustomData(self, key: any) -> any:
         """Returns the value for a custom data entry.
@@ -48,6 +49,8 @@ class CustomDataContainer:
         prefix = "_" if self.isUnderscoreFormat() else ""
         if prefix + "customData" not in self.data.keys():
             return None
+
+        key = prefix + key
         customData = self.data[prefix + "customData"]
         if customData and key in customData.keys():
             return customData[key]

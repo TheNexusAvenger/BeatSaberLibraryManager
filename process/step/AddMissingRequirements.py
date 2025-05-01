@@ -25,7 +25,7 @@ def addMissingRequirements(mapFiles: MapFileSet) -> None:
             # Add Noodle Extensions and Chroma
             if "_customData" in difficultyMapData.keys() and "_pointDefinitions" in difficultyMapData["_customData"].keys():
                 # Prepare the requirements.
-                requirements = difficultyData.getCustomData("_requirements")
+                requirements = difficultyData.getCustomData("requirements")
                 if requirements is None:
                     requirements = {}
 
